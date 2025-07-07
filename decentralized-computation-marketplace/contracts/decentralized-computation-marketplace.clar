@@ -260,3 +260,36 @@
     metadata: (string-utf8 200)
   }
 )
+
+;; Template counter
+(define-data-var template-id-counter uint u0)
+
+;; Dispute data
+(define-map disputes
+  {task-id: uint}
+  {
+    initiator: principal,
+    respondent: principal,
+    evidence-hash: (buff 32),
+    arbiter: (optional principal),
+    status: uint,
+    created-at: uint,
+    resolution: (optional {
+      winner: principal,
+      resolution-note: (string-utf8 200),
+      bounty-distribution: (list 5 {recipient: principal, amount: uint})
+    })
+  }
+)
+
+;; Arbiters registry
+(define-map arbiters
+  principal
+  {
+    cases-handled: uint,
+    success-rate: uint,
+    specialty: (string-utf8 50),
+    active: bool,
+    stake: uint
+  }
+)
