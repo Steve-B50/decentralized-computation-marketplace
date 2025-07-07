@@ -338,3 +338,62 @@
     })
   }
 )
+
+;; Map to track worker certifications
+(define-map worker-certifications
+  principal
+  {
+    certificates: (list 10 {
+      certification-name: (string-utf8 100),
+      issuer: principal,
+      issue-date: uint,
+      expiry-date: uint,
+      certification-hash: (buff 32),
+      revoked: bool
+    }),
+    specializations: (list 5 {
+      domain: (string-utf8 50),
+      expertise-level: uint,
+      years-experience: uint,
+      endorsements: (list 10 principal)
+    })
+  }
+)
+
+;; Map to track certification authorities
+(define-map certification-authorities
+  principal
+  {
+    authority-name: (string-utf8 100),
+    domains: (list 10 (string-utf8 50)),
+    authority-reputation: uint,
+    registered-at: uint,
+    authority-stake: uint
+  }
+)
+
+;; Function to register as certification authority
+(define-public (register-certification-authority
+  (authority-name (string-utf8 100))
+  (domains (list 10 (string-utf8 50)))
+  (authority-stake uint)
+)
+  (begin
+    ;; Transfer stake to contract
+    (try! (stx-transfer? authority-stake tx-sender (as-contract tx-sender)))
+    
+    ;; Register authority
+    (map-set certification-authorities
+      tx-sender
+      {
+        authority-name: authority-name,
+        domains: domains,
+        authority-reputation: u0,
+        registered-at: stacks-block-height,
+        authority-stake: authority-stake
+      }
+    )
+    
+    (ok true)
+  )
+)
