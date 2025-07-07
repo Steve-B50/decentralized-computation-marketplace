@@ -244,3 +244,19 @@
     membership-tier: uint
   }
 )
+;; Task templates
+(define-map task-templates
+  {template-id: uint}
+  {
+    name: (string-utf8 50),
+    description: (string-utf8 200),
+    default-bounty: uint,
+    default-stake: uint,
+    default-complexity: uint,
+    category: (string-utf8 50),
+    creator: principal,
+    is-public: bool,
+    created-at: uint,
+    metadata: (string-utf8 200)
+  }
+)
